@@ -6,7 +6,7 @@ import { RnPdfGenieView } from 'rn-pdf-genie';
 export default function App() {
   return (
     <View style={styles.container}>
-      <RnPdfGenieView color="#32a852" style={styles.box} />
+      <RnPdfGenieView style={{ flex: 1 }} />
     </View>
   );
 }
@@ -14,8 +14,6 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   box: {
     width: 60,

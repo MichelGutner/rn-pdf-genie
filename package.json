@@ -41,9 +41,9 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MichelGutner/rn-media-player/rn-pdf-genie.git"
+    "url": "git+https://github.com/MichelGutner/rn-pdf-genie.git"
   },
-  "author": "Michel Gutner <michelgutner@gmail.com> (https://github.com/MichelGutner/rn-media-player)",
+  "author": "Michel Gutner <michelgutner@gmail.com> (https://github.com/MichelGutner/rn-pdf-genie)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/MichelGutner/rn-media-player/rn-pdf-genie/issues"

@@ -12,8 +12,7 @@ const LINKING_ERROR =
   '- You are not using Expo Go\n';
 
 type RnPdfGenieProps = {
-  color: string;
-  style: ViewStyle;
+  style?: ViewStyle;
 };
 
 const ComponentName = 'RnPdfGenieView';

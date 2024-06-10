@@ -21,14 +21,5 @@ class RnPdfGenieView : UIView {
         let pdfViewer = UIHostingController(rootView: ContentView())
         pdfViewer.view.frame = bounds
         addSubview(pdfViewer.view)
-//        pdfViewer.view.translatesAutoresizingMaskIntoConstraints = false
-//        
-//        NSLayoutConstraint.activate([
-//            pdfViewer.view.leadingAnchor.constraint(greaterThanOrEqualTo: safeAreaLayoutGuide.leadingAnchor),
-//            pdfViewer.view.trailingAnchor.constraint(greaterThanOrEqualTo: safeAreaLayoutGuide.trailingAnchor),
-//            pdfViewer.view.topAnchor.constraint(greaterThanOrEqualTo: safeAreaLayoutGuide.topAnchor),
-//            pdfViewer.view.bottomAnchor.constraint(greaterThanOrEqualTo: safeAreaLayoutGuide.bottomAnchor),
-//        ])
-        
     }
 }

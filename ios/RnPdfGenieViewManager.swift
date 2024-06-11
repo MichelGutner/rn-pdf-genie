@@ -20,6 +20,6 @@ class RnPdfGenieView : UIView {
     override func layoutSubviews() {
         let pdfViewer = UIHostingController(rootView: ContentView())
         pdfViewer.view.frame = bounds
-        addSubview(pdfViewer.view)
+        superview?.addSubview(pdfViewer.view)
     }
 }

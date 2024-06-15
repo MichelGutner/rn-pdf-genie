@@ -1,7 +1,10 @@
+import React from 'react';
+
 import {
   requireNativeComponent,
   UIManager,
   Platform,
+  StyleSheet,
   type ViewStyle,
 } from 'react-native';
 
@@ -12,14 +15,28 @@ const LINKING_ERROR =
   '- You are not using Expo Go\n';
 
 type RnPdfGenieProps = {
+  searchTerm?: string;
   style?: ViewStyle;
 };
 
 const ComponentName = 'RnPdfGenieView';
 
-export const RnPdfGenieView =
+const Native =
   UIManager.getViewManagerConfig(ComponentName) != null
     ? requireNativeComponent<RnPdfGenieProps>(ComponentName)
     : () => {
         throw new Error(LINKING_ERROR);
       };
+
+export const PDFViewer = (props: RnPdfGenieProps) => {
+  const style = { ...styles.container, ...props.style };
+
+  return <Native {...props} style={style as ViewStyle} />;
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    overflow: `hidden`,
+  },
+});

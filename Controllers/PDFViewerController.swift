@@ -30,7 +30,6 @@ class PDFViewerController: UIViewController, PDFViewDelegate {
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [self] in
                     updateCurrentMatchHighlight()
-                    print(pdfView.currentPage)
                 }
             }
             
@@ -40,7 +39,11 @@ class PDFViewerController: UIViewController, PDFViewDelegate {
     
     @objc private func didFindMatch(_ sender: Notification) {
         guard let selection = sender.userInfo?["PDFDocumentFoundSelection"] as? PDFSelection else { return }
-        self.matchesFound.append(selection)
+        if (selection.pages.first === pdfView.currentPage) {
+            self.matchesFound.insert(selection, at: 0)
+        } else {
+            self.matchesFound.append(selection)
+        }
         selection.color = .yellow
     }
     

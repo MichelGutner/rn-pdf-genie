@@ -24,7 +24,6 @@ class RnPdfGenieView : UIView, PDFDocumentDelegate {
     override func layoutSubviews() {
         super.layoutSubviews()
         buildPDFWithCache()
-        print(pdfView.currentPage)
     }
     
 

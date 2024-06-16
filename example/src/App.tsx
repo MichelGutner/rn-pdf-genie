@@ -1,8 +1,14 @@
 /* eslint-disable react-native/no-inline-styles */
 import * as React from 'react';
-import { SafeAreaView, StyleSheet, TextInput } from 'react-native';
+import {
+  Button,
+  SafeAreaView,
+  StyleSheet,
+  TextInput,
+  View,
+} from 'react-native';
 
-import { PDFViewer } from 'rn-pdf-genie';
+import { DisplayDirection, PDFViewer } from 'rn-pdf-genie';
 
 export default function App() {
   const [searchText, setSearchText] = React.useState('');
@@ -13,13 +19,23 @@ export default function App() {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <TextInput
-        style={styles.searchBar}
-        placeholder="Search"
-        value={searchText}
-        onChangeText={handleSearch}
+      <View style={{ flexDirection: `row` }}>
+        <TextInput
+          style={styles.searchBar}
+          placeholder="Search"
+          value={searchText}
+          onChangeText={handleSearch}
+        />
+        <Button title="<" onPress={() => handleSearch(searchText)} />
+        <Button title=">" onPress={() => handleSearch(searchText)} />
+      </View>
+      <PDFViewer
+        source={{
+          url: '',
+        }}
+        searchTerm={searchText}
+        direction={DisplayDirection.HORIZONTAL}
       />
-      <PDFViewer searchTerm={searchText} />
     </SafeAreaView>
   );
 }
@@ -31,6 +47,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   searchBar: {
+    flex: 1,
     height: 40,
     borderColor: '#ccc',
     borderWidth: 1,

@@ -4,5 +4,7 @@
 
 //RCT_EXPORT_VIEW_PROPERTY(color, NSString)
 RCT_EXPORT_VIEW_PROPERTY(searchTerm, NSString)
+RCT_EXPORT_VIEW_PROPERTY(direction, NSString)
+RCT_EXPORT_VIEW_PROPERTY(source, NSDictionary)
 
 @end

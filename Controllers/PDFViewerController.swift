@@ -17,11 +17,26 @@ class PDFViewerController: UIViewController, PDFViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Configurar o botão flutuante
+        let settingsButton = UIButton(type: .custom)
+        settingsButton.setImage(UIImage(named: "pencil"), for: .normal)
+        settingsButton.frame = CGRect(x: 170, y: 120, width: 50, height: 50)
+        settingsButton.layer.cornerRadius = 25 // para tornar o botão circular, se desejado
+        settingsButton.backgroundColor = .white // cor de fundo do botão
+        settingsButton.layer.shadowColor = UIColor.black.cgColor // cor da sombra
+        settingsButton.layer.shadowOffset = CGSize(width: 0, height: 2) // deslocamento da sombra
+        settingsButton.layer.shadowOpacity = 0.5 // opacidade da sombra
+        settingsButton.layer.shadowRadius = 3.0 // raio da sombra
+        settingsButton.addTarget(self, action: #selector(settingsButtonTapped), for: .touchUpInside)
+
+        
         view.addSubview(pdfView)
+        pdfView.addSubview(settingsButton)
         
         NotificationCenter.default.addObserver(self, selector: #selector(didFindMatch(_:)), name: Notification.Name.PDFDocumentDidFindMatch, object: nil)
         
-
+        
         NotificationCenter.default.addObserver(forName: Notification.Name("SEARCH"), object: nil, queue: .main) { [self] notification in
             self.clearMatches()
             if let searchTerm = notification.userInfo?["search"] as? String {
@@ -34,6 +49,19 @@ class PDFViewerController: UIViewController, PDFViewDelegate {
             }
             
         }
+    }
+    
+    @objc func settingsButtonTapped() {
+        // Implemente aqui o que acontece quando o botão de configurações é tocado
+        print("Botão de configurações tocado!")
+
+        // Exemplo: Abrir uma tela de configurações
+        let settingsViewController = UIViewController()
+        settingsViewController.view.backgroundColor = .white
+        settingsViewController.title = "Configurações"
+
+        let navController = UINavigationController(rootViewController: settingsViewController)
+        present(navController, animated: true, completion: nil)
     }
     
     
@@ -57,7 +85,7 @@ class PDFViewerController: UIViewController, PDFViewDelegate {
         super.traitCollectionDidChange(previousTraitCollection)
         
         if ((previousTraitCollection?.hasDifferentColorAppearance(comparedTo: previousTraitCollection)) != nil) {
-//            pdfView.backgroundColor = self.parentView.backgroundColor ?? (previousTraitCollection?.userInterfaceStyle == .light ? .white : .black)
+            pdfView.backgroundColor = self.pdfView.backgroundColor
         }
     }
 }

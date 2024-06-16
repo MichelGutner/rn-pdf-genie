@@ -21,24 +21,38 @@ class RnPdfGenieView : UIView, PDFDocumentDelegate {
     private static var cachedPDFView: PDFView?
     private static var cachedDocument: PDFDocument?
     
-    @objc var direction: NSString = "VERTICAL"
-    
     @objc var source: NSDictionary = [:]
+    @objc var direction: NSString = "VERTICAL"
+    @objc var onSearchTermCount: RCTDirectEventBlock?
+    
+    
+    
     
     override func layoutSubviews() {
         super.layoutSubviews()
         guard let url = self.source["url"] as? String else { return }
         buildPDFWithCache(url)
         setDisplayDirection()
+        setupNotifications()
     }
     
 
 }
 
+public func sendNotification(_ name: String, userInfo: [AnyHashable : Any]) {
+    NotificationCenter.default.post(name: Notification.Name(name), object: nil, userInfo: userInfo)
+}
+
+public func getNotification(_ name: String, completionHandler: @escaping (Notification) -> Void) {
+    NotificationCenter.default.addObserver(forName: Notification.Name(name), object: nil, queue: .main) { notification in
+        completionHandler(notification)
+    }
+}
+
 // external funcs
 extension RnPdfGenieView {
     @objc func setSearchTerm(_ searchTerm: String) {
-        NotificationCenter.default.post(name: Notification.Name("SEARCH"), object: nil, userInfo: ["search": searchTerm])
+       sendNotification("SEARCH", userInfo: ["search": searchTerm])
     }
     
     func setDisplayDirection() {
@@ -65,7 +79,6 @@ extension RnPdfGenieView {
         } else {
             pdfView = RnPdfGenieView.cachedPDFView
             pdfView.frame = bounds
-            
             let pdf = UIHostingController(rootView: PDFViewerControllerManager(pdfView))
             pdf.view.frame = bounds
             
@@ -85,6 +98,14 @@ extension RnPdfGenieView {
             }
         } else {
             pdfView.document = RnPdfGenieView.cachedDocument
+        }
+    }
+    
+    private func setupNotifications() {
+        getNotification("SEARCH_COUNT") { [self] notification in
+            if let count = notification.userInfo?["count"] as? NSNumber {
+                onSearchTermCount?(["count": count])
+            }
         }
     }
 }

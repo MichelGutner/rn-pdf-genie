@@ -6,5 +6,6 @@
 RCT_EXPORT_VIEW_PROPERTY(searchTerm, NSString)
 RCT_EXPORT_VIEW_PROPERTY(direction, NSString)
 RCT_EXPORT_VIEW_PROPERTY(source, NSDictionary)
+RCT_EXPORT_VIEW_PROPERTY(onSearchTermCount, RCTDirectEventBlock)
 
 @end

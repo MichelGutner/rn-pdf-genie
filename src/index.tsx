@@ -7,6 +7,7 @@ import {
   StyleSheet,
   type ViewStyle,
 } from 'react-native';
+import type { DirectEventHandler } from 'react-native/Libraries/Types/CodegenTypes';
 
 const LINKING_ERROR =
   `The package 'rn-pdf-genie' doesn't seem to be linked. Make sure: \n\n` +
@@ -26,6 +27,12 @@ type PDFGenieProps = {
    */
   source: { url: string };
   /**
+   * @params default is 1
+   * @description
+   * This field used to zoom pdf
+   */
+  scale?: number;
+  /**
    * @params default is empty string
    * @description
    * This field used to search specific text
@@ -36,9 +43,12 @@ type PDFGenieProps = {
    * @description
    * This field used to change display direction
    */
-  direction: (typeof DisplayDirection)[keyof typeof DisplayDirection];
+  direction?: (typeof DisplayDirection)[keyof typeof DisplayDirection];
   style?: ViewStyle;
+  onSearchTermCount?: TGenericEventHandler<{ count: number }>;
 };
+
+type TGenericEventHandler<T> = DirectEventHandler<Readonly<T>>;
 
 const ComponentName = 'RnPdfGenieView';
 

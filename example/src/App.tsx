@@ -1,17 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
 import * as React from 'react';
-import {
-  Button,
-  SafeAreaView,
-  StyleSheet,
-  TextInput,
-  View,
-} from 'react-native';
+import { SafeAreaView, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { DisplayDirection, PDFViewer } from 'rn-pdf-genie';
 
 export default function App() {
   const [searchText, setSearchText] = React.useState('');
+  const [count, setCount] = React.useState(0);
 
   const handleSearch = (text: string) => {
     setSearchText(text);
@@ -19,15 +14,14 @@ export default function App() {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ flexDirection: `row` }}>
+      <View style={{ flexDirection: `row`, alignItems: 'center' }}>
         <TextInput
           style={styles.searchBar}
           placeholder="Search"
           value={searchText}
           onChangeText={handleSearch}
         />
-        <Button title="<" onPress={() => handleSearch(searchText)} />
-        <Button title=">" onPress={() => handleSearch(searchText)} />
+        <Text style={{ padding: 12 }}>{count}</Text>
       </View>
       <PDFViewer
         source={{
@@ -35,6 +29,7 @@ export default function App() {
         }}
         searchTerm={searchText}
         direction={DisplayDirection.HORIZONTAL}
+        onSearchTermCount={(e) => setCount(e.nativeEvent.count)}
       />
     </SafeAreaView>
   );
@@ -54,10 +49,5 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: 10,
     marginBottom: 10,
-  },
-  item: {
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
   },
 });

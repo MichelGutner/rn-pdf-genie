@@ -22,19 +22,31 @@ class PDFViewerController: UIViewController, PDFViewDelegate {
         
         getNotification("SEARCH") { [self] notification in
             Task { @MainActor in
-                clearMatches()
                 if let searchTerm = notification.userInfo?["search"] as? String {
-                    pdfView?.document?.beginFindString(searchTerm, withOptions: [.caseInsensitive, .diacriticInsensitive])
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [self] in
+                    clearMatches()
+                    pdfView?.document?.beginFindString(searchTerm, withOptions: [.caseInsensitive, .regularExpression, .diacriticInsensitive])
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [self] in
                         updateCurrentMatchHighlight()
                     }
                 }
             }
         }
-    }
         
+        getNotification("SEARCH_NEXT") { [self] _ in
+            Task { @MainActor in
+                goToNextMatchField()
+            }
+        }
+        getNotification("SEARCH_PREVIOUS") { [self] _ in
+            Task { @MainActor in
+                goToPreviousMatchField()
+            }
+        }
+    }
+    
     @objc private func didFindMatch(_ sender: Notification) {
         guard let selection = sender.userInfo?["PDFDocumentFoundSelection"] as? PDFSelection else { return }
+        
         if (selection.pages.first === pdfView.currentPage) {
             self.matchesFound.insert(selection, at: 0)
         } else {
@@ -43,11 +55,6 @@ class PDFViewerController: UIViewController, PDFViewDelegate {
         selection.color = .yellow
     }
     
-    
-    
-    @objc private func nextMatchButtonTapped() {
-        goToNextMatchField()
-    }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
@@ -66,10 +73,11 @@ extension PDFViewerController {
             match.color = (index == currentMatchIndex) ? .green : .yellow
         }
         
-        goToMatchField(at: currentMatchIndex)
         pdfView.highlightedSelections = matchesFound
         let count = matchesFound.count
-        sendNotification("SEARCH_COUNT", userInfo: ["count": count])
+        let currentIndex = count > 0 ? currentMatchIndex + 1 : 0
+        sendNotification("SEARCH_COUNT", userInfo: ["totalCount": count, "currentIndex": currentIndex])
+        goToMatchField(at: currentMatchIndex)
     }
     
     func clearMatches() {
@@ -80,6 +88,17 @@ extension PDFViewerController {
     func goToNextMatchField() {
         guard !matchesFound.isEmpty else { return }
         currentMatchIndex = (currentMatchIndex + 1) % matchesFound.count
+        updateCurrentMatchHighlight()
+    }
+    
+    func goToPreviousMatchField() {
+        guard !matchesFound.isEmpty else { return }
+        if (currentMatchIndex == 0) {
+            currentMatchIndex = 0
+        } else {
+            currentMatchIndex = (currentMatchIndex - 1) % matchesFound.count
+        }
+        
         updateCurrentMatchHighlight()
     }
     

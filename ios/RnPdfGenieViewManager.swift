@@ -23,7 +23,9 @@ class RnPdfGenieView : UIView, PDFDocumentDelegate {
     
     @objc var source: NSDictionary = [:]
     @objc var direction: NSString = "VERTICAL"
-    @objc var onSearchTermCount: RCTDirectEventBlock?
+    @objc var onSearchTermData: RCTDirectEventBlock?
+    @objc var scale: Float = 1.0
+    @objc var autoScale: Bool = true
     
     
     
@@ -55,6 +57,14 @@ extension RnPdfGenieView {
        sendNotification("SEARCH", userInfo: ["search": searchTerm])
     }
     
+    @objc func setNextSearchFieldIndex(_ nextSearchFieldIndex: Float) {
+        sendNotification("SEARCH_NEXT", userInfo: [:])
+    }
+    
+    @objc func setPreviousSearchFieldIndex(_ previousSearchFieldIndex: Float) {
+        sendNotification("SEARCH_PREVIOUS", userInfo: [:])
+    }
+    
     func setDisplayDirection() {
         switch (direction) {
         case "HORIZONTAL":
@@ -71,7 +81,7 @@ extension RnPdfGenieView {
     func buildPDFWithCache(_ url: String) {
         if RnPdfGenieView.cachedPDFView == nil {
             pdfView = PDFView(frame: self.bounds)
-            pdfView.autoScales = true
+            pdfView.autoScales = autoScale
             pdfView.clipsToBounds = true
             pdfView.document?.delegate = self
             RnPdfGenieView.cachedPDFView = pdfView
@@ -103,8 +113,8 @@ extension RnPdfGenieView {
     
     private func setupNotifications() {
         getNotification("SEARCH_COUNT") { [self] notification in
-            if let count = notification.userInfo?["count"] as? NSNumber {
-                onSearchTermCount?(["count": count])
+            if let count = notification.userInfo?["totalCount"] as? NSNumber, let currentIndex = notification.userInfo?["currentIndex"] {
+                onSearchTermData?(["totalCount": count, "currentIndex": currentIndex])
             }
         }
     }

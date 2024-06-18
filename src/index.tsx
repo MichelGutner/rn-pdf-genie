@@ -27,11 +27,12 @@ type PDFGenieProps = {
    */
   source: { url: string };
   /**
-   * @params default is 1
-   * @description
-   * This field used to zoom pdf
+   * @param autoScale - Optional boolean flag indicating whether to automatically zoom the PDF.
+   *                    Default value is true.
+   * @description This field determines if the PDF should be automatically scaled to fit the view.
    */
-  scale?: number;
+  autoScale?: boolean;
+
   /**
    * @params default is empty string
    * @description
@@ -44,8 +45,13 @@ type PDFGenieProps = {
    * This field used to change display direction
    */
   direction?: (typeof DisplayDirection)[keyof typeof DisplayDirection];
+  nextSearchFieldIndex?: number;
+  previousSearchFieldIndex?: number;
   style?: ViewStyle;
-  onSearchTermCount?: TGenericEventHandler<{ count: number }>;
+  onSearchTermData?: TGenericEventHandler<{
+    totalCount: number;
+    currentIndex: number;
+  }>;
 };
 
 type TGenericEventHandler<T> = DirectEventHandler<Readonly<T>>;
